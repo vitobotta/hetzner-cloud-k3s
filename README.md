@@ -79,8 +79,9 @@ When deploying Kubernetes (k3s):
 - installs the Hetzner CSI driver so that you can provision persistent volumes using Hetzner's block storage
 - installs Rancher's system upgrade controller to make Kubernets upgrades super easy and really fast (more on this in the next section)
 
----
+### Idempotency
 
+The script can be run with exactly the same arguments as many times as you want, for example to add worker nodes.
 ## Upgrades
 
 To perform an upgrade of the Kubernetes/k3s version, first find the newer release you want to upgrade to. You can see the list of available releases with the following script:
