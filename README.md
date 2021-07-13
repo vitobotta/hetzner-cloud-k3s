@@ -2,7 +2,7 @@
 
 This repository contains some scripts to create, upgrade and destroy a Kubernetes cluster in [Hetzner Cloud](https://www.hetzner.com/cloud) using the lightweight Kubernetes distribution [k3s](https://k3s.io/), from [Rancher](https://rancher.com/). The scripts manage all the resources required for a secure cluster (firewall and private network together with instances).
 
-This may well be the quickest, easiest, and cheapest way to create a self managed Kubernetes cluster. A cluster with master and a couple of worker nodes using the fast cpx21 instances (3 cores, 4GB each) costs just 28 euros per month!
+This may well be the quickest, easiest, and cheapest way to create a self managed Kubernetes cluster. A cluster with master and a couple of worker nodes using the fast cpx21 instances (3 cores, 4GB each), as well as a load balancer, costs just 25 euros per month!
 
 ## Prerequisites
 
