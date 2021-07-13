@@ -132,6 +132,6 @@ Like for upgrades, the master/worker instance types and the number of workers ar
 
 ## Notes
 
-In this setup, the control plane has a single master and therefore is not HA. Even some managed Kubernetes services such as the one offered by [DigitalOcean](https://www.digitalocean.com/products/kubernetes/) have a non-HA control plane, because if for example the master is temporarily unavailable due to maintenance or else, the actual workloads are not affected in most cases, so this is fine in most cases.
+In this setup, the control plane has a single master and therefore is not HA. Even some managed Kubernetes services such as the one offered by [DigitalOcean](https://www.digitalocean.com/products/kubernetes/) have a non-HA control plane, because if for example the master is temporarily unavailable due to maintenance or else, the actual workloads are not affected in most cases, so this is fine for simple clusters.
 
 k3s also supports HA configurations with multiple master either with external datastores such as MySQL or Postgres, or with an embedded etcd, so I may add this support to my scripts in the future. For now I am happy with a single master and like I said it's fine in most cases.
