@@ -102,8 +102,18 @@ Then run the following command to initiate the upgrade:
 
 The script will create upgrade "plans", which will be picked by the system upgrade controller to initiate the upgrade. It will first upgrade the master, and then the workers with a concurrency that equals the number of workers minus 1. The process takes around a minute or less.
 
-Please note that the upgrade process may be delayed if the metrics server is unavailable. So ensure that it is running before initiating the upgrade.
+Notes:
+- the upgrade requires that the metrics server be running. Ensure the metrics server is installed and running before initiating an upgrade
+- the script assumes that there is a kube context with the same name as the cluster. You should have it with the kubeconfig generated when you created the cluster in first place.
+- if something goes wrong or some nodes are not upgraded, you can re-run the script but first you need to delete the existing upgrade plans/jobs and restart the upgrade controller:
 
+```bash
+kubectl --context $CLUSTER_NAME -n system-upgrade delete job --all
+kubectl --context $CLUSTER_NAME -n system-upgrade delete plan --all
+kubectl --context $CLUSTER_NAME -n system-upgrade rollout restart deploy system-upgrade-controller
+```
+
+Wait for the controller's pod to be running and run the script again. You can also check the status of the upgrade jobs and pods if something isn't working as expected.
 
 ## Destroying the cluster
 
@@ -118,13 +128,10 @@ Then run the destroy script:
 ```bash
 ./destroy_cluster.sh \
   --hetzner-token <hetzner token> \
-  --cluster-name <cluster name> \
-  --master-instance-type <master instance type> \
-  --worker-instance-type <worker instance type> \
-  --worker-count <number of workers>
+  --cluster-name <cluster name>
 ```
 
-The master/worker instance types and the number of workers are needed to determine the names of the resources to destroy. This takes just a few seconds.
+Note: the script assumes that there is a kube context with the same name as the cluster. You should have it with the kubeconfig generated when you created the cluster in first place.
 
 
 ## Notes

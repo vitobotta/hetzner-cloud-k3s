@@ -2,14 +2,16 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-source $SCRIPT_DIR/lib/upgrade/functions.sh
+source $SCRIPT_DIR/lib/shared/functions.sh
 
 source $SCRIPT_DIR/lib/upgrade/parse_arguments.sh
 
-KUBECONFIG=$KUBECONFIG_PATH
 WORKER_COUNT=$(kubectl --context $CLUSTER_NAME get nodes --no-headers -l node-role.kubernetes.io/master!=true | wc -l)
 WORKER_UPGRADE_CONCURRENCY=$((WORKER_COUNT-1))
 
+if [ "$WORKER_UPGRADE_CONCURRENCY" -eq "0" ]; then
+   WORKER_UPGRADE_CONCURRENCY=1
+fi
 
 echo "Configuring cluster $CLUSTER_NAME for upgrade to k3s version $TO_VERSION ..."
 

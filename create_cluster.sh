@@ -2,7 +2,7 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-source $SCRIPT_DIR/lib/create/functions.sh
+source $SCRIPT_DIR/lib/shared/functions.sh
 
 source $SCRIPT_DIR/lib/create/parse_arguments.sh
 

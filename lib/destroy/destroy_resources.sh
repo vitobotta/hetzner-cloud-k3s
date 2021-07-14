@@ -1,9 +1,11 @@
-destroy_server $MASTER_INSTANCE_TYPE master &
+NODES=($(kubectl --context $CLUSTER_NAME get nodes --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}'))
 
-COUNTER=0
-while [  $COUNTER -lt $WORKER_COUNT ]; do
-  let COUNTER=COUNTER+1
-  destroy_server $WORKER_INSTANCE_TYPE worker$COUNTER &
+for NODE in "${NODES[@]}"
+do
+  :
+  echo "Deleting instance $NODE..."
+
+  hcloud server delete $NODE &
 done
 
 wait
