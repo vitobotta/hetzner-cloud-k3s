@@ -44,11 +44,9 @@ The whole process takes 1m30s or less for a couple of nodes so it's extremely fa
 - master and instance types: these are the short codes for the instance types you want to use for the master and the workers. You can find the list of available instance types either in the Hetzner Cloud control panel or by running this curl command with your Hetzner token:
 
 ```bash
-curl \
-	-H "Authorization: Bearer $HETZNER_API_TOKEN" \
-	'https://api.hetzner.cloud/v1/server_types'
+./instance_types.sh --hetzner-token <hetzner token>
 ```
-
+It will show a list of the instance types with their information (name, price, memory, cpu, etc) in json format
 - flannel-interface: this is the name of the private network interface that will be used for the private communication between the nodes, so that no services (other than the Kubernetes API on the port 6443 on the master) are exposed to the public Internet. Be aware that in Hetzner Cloud the name of the private network interface changes depending on the instance type. For simplicity, the script assumes that both master and worker nodes are of the same instance type class (e.g. all from the CPX series), so it requires that you specify only one interface in the arguments
 - location: this is the short code for the datacenter location. Currently the available locations are nbg1 (Nuremberg, Germany), fsn1 (Falkenstein, Germany) and hel1 (Helsinki, Finland)
 - ssh key path: this is the path of your public ssh key that you want to add to the servers, so that your computer can run commands on them; this argument is optional and if omitted the script will assume ~/.ssh/id_rsa.pub as the path of the public key
@@ -90,7 +88,13 @@ To perform an upgrade of the Kubernetes/k3s version, first find the newer releas
 ./releases.sh
 ```
 
+Please note that the script requires the jq utility to format the release names in a user friendly format.
+
 Next, switch to the Hetzner context for the right project:
+
+```bash
+hcloud context use <cluster-name>
+```
 
 Then run the following command to initiate the upgrade:
 
