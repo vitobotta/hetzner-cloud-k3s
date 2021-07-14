@@ -97,15 +97,12 @@ Then run the following command to initiate the upgrade:
 ```bash
 ./upgrade_cluster.sh \
   --cluster-name <cluster name> \
-  --to-version <new k3s version> \
-  --master-instance-type <master instance type> \
-  --worker-instance-type <worker instance type> \
-  --worker-count <number of workers>
+  --to-version <new k3s version>
 ```
 
-The master/worker instance types and the worker count are required to correctly generate the names of the instances to upgrade. This is to avoid problems if you happen to have multiple Kubernetes clusters in the same Hetzner project; I strongly recommend keeping a separate project for each cluster though.
-
 The script will create upgrade "plans", which will be picked by the system upgrade controller to initiate the upgrade. It will first upgrade the master, and then the workers with a concurrency that equals the number of workers minus 1. The process takes around a minute or less.
+
+Please note that the upgrade process may be delayed if the metrics server is unavailable. So ensure that it is running before initiating the upgrade.
 
 
 ## Destroying the cluster
@@ -127,7 +124,7 @@ Then run the destroy script:
   --worker-count <number of workers>
 ```
 
-Like for upgrades, the master/worker instance types and the number of workers are needed to determine the names of the resources to destroy. This takes just a few seconds.
+The master/worker instance types and the number of workers are needed to determine the names of the resources to destroy. This takes just a few seconds.
 
 
 ## Notes

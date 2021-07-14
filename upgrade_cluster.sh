@@ -2,39 +2,20 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-source $SCRIPT_DIR/lib/upgrade/parse_arguments.sh
-
-KUBECONFIG=$KUBECONFIG_PATH
-WORKER_UPGRADE_CONCURRENCY=$((WORKER_COUNT-1))
-
 source $SCRIPT_DIR/lib/upgrade/functions.sh
 
 source $SCRIPT_DIR/lib/upgrade/parse_arguments.sh
 
+KUBECONFIG=$KUBECONFIG_PATH
+WORKER_COUNT=$(kubectl --context $CLUSTER_NAME get nodes --no-headers -l node-role.kubernetes.io/master!=true | wc -l)
+WORKER_UPGRADE_CONCURRENCY=$((WORKER_COUNT-1))
+
+
 echo "Configuring cluster $CLUSTER_NAME for upgrade to k3s version $TO_VERSION ..."
 
+kubectl --context $CLUSTER_NAME label nodes --all k3s-upgrade=true
 
-echo
-echo "Preparing master for upgrade..."
-
-kubectl label nodes $(instance_name $MASTER_INSTANCE_TYPE master) k3s-upgrade=true
-
-
-COUNTER=0
-while [  $COUNTER -lt $WORKER_COUNT ]; do
-  let COUNTER=COUNTER+1
-
-  INSTANCE_NAME=$(instance_name $WORKER_INSTANCE_TYPE worker$COUNTER)
-
-  echo
-  echo "Preparing worker $COUNTER for upgrade..."
-
-  kubectl label nodes $INSTANCE_NAME k3s-upgrade=true
-done
-
-
-
-kubectl apply -f - <<EOF
+kubectl --context $CLUSTER_NAME apply -f - <<EOF
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
@@ -94,4 +75,4 @@ EOF
 echo
 read -p "Upgrade will now start. You will be able to monitor the version change after pressing any key... " -n1 -s
 
-watch kubectl get nodes
+watch kubectl --context $CLUSTER_NAME get nodes
