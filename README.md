@@ -41,7 +41,7 @@ The whole process takes 1m30s or less for a couple of nodes so it's extremely fa
 - the name of the cluster should ideally be URL compatible - such as in a few words separated by dashes - to avoid issues
 - the create script will overwrite the file at the path you specify with --kubeconfig-path
 - k3s-token: this can be any valid string. It is used for authenticated communication between master and workers
-- master and instance types: these are the short codes for the instance types you want to use for the master and the workers. You can find the list of available instance types either in the Hetzner Cloud control panel or by running this curl command with your Hetzner token:
+- master and instance types: these are the short codes for the instance types you want to use for the master and the workers. You can find the list of available instance types either in the Hetzner Cloud control panel or by running this command with your Hetzner token:
 
 ```bash
 ./instance_types.sh --hetzner-token <hetzner token>
