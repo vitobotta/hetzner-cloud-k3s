@@ -107,7 +107,7 @@ Then run the following command to initiate the upgrade:
 The script will create upgrade "plans", which will be picked by the system upgrade controller to initiate the upgrade. It will first upgrade the master, and then the workers with a concurrency that equals the number of workers minus 1. The process takes around a minute or less.
 
 Notes:
-- the upgrade requires that the metrics server be running. Ensure the metrics server is installed and running before initiating an upgrade
+- the upgrade requires that the metrics server be running (the metrics server is installed automatically when you create the cluster)
 - the script assumes that there is a kube context with the same name as the cluster. You should have it with the kubeconfig generated when you created the cluster in first place.
 - if something goes wrong or some nodes are not upgraded, you can re-run the script but first you need to delete the existing upgrade plans/jobs and restart the upgrade controller:
 
