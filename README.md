@@ -75,7 +75,7 @@ When deploying Kubernetes (k3s):
 
 - installs the Hetzner cloud controller manager so that you can provision load balancers for your services as soon as the cluster is ready
 - installs the Hetzner CSI driver so that you can provision persistent volumes using Hetzner's block storage
-- installs Rancher's system upgrade controller to make Kubernets upgrades super easy and really fast (more on this in the next section)
+- installs Rancher's system upgrade controller to make Kubernetes upgrades super easy and really fast (more on this in the next section)
 
 ### Idempotency
 
