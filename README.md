@@ -138,6 +138,35 @@ Then run the destroy script:
 Note: the script assumes that there is a kube context with the same name as the cluster. You should have it with the kubeconfig generated when you created the cluster in first place.
 
 
+## Load balancers
+
+Once the cluster is ready, you can already provision services of type LoadBalancer thanks to the Hetzner Cloud Controller Manager that is installed automatically.
+
+There are some annotations that you can add to your services to configure the load balancers. I personally use the following:
+
+```yaml
+  service:
+    annotations:
+      load-balancer.hetzner.cloud/hostname: <a valid fqdn>
+      load-balancer.hetzner.cloud/http-redirect-https: 'false'
+      load-balancer.hetzner.cloud/location: nbg1
+      load-balancer.hetzner.cloud/name: <lb name>
+      load-balancer.hetzner.cloud/uses-proxyprotocol: 'true'
+      load-balancer.hetzner.cloud/use-private-ip: "true"
+```
+
+I set `load-balancer.hetzner.cloud/hostname` to a valid hostname that I configure (after creating the load balancer) with the IP of the load balancer; I use this together with the annotation `load-balancer.hetzner.cloud/uses-proxyprotocol: 'true'` to enable the proxy protocol. Reason: I enable the proxy protocol on the load balancers so that my ingress controller and applications can "see" the real IP address of the client. However when this is enabled, there is a problem where cert-manager fails http01 challenges; you can find an explanation of why [here](https://github.com/compumike/hairpin-proxy) but the easy fix provided by some providers including Hetzner, is to configure the load balancer so that it uses a hostname instead of an IP. Again, read the explanation for the reason but if you care about seeing the actual IP of the client then I recommend you use these two annotations.
+
+The annotation `load-balancer.hetzner.cloud/use-private-ip: "true"` ensures that the communication between the load balancer and the nodes happens through the private network, so we don't have to open any ports on the nodes (other than the port 6443 for the Kubernetes API server).
+
+The other annotations should be self explanatory. You can find a list of the available annotations [here](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/master/internal/annotation/load_balancer.go).
+
+
+## Persistent volumes
+
+Once the cluster is ready you can create persistent volumes out of the box with the default storage class `hcloud-volumes`, since the Hetzner CSI driver is installed automatically. This will use Hetzner's block storage (based on Ceph so it's replicated and highly available) for your persistent volumes. Note that the minimum size of a volume is 10Gi. If you specify a smaller size for a volume, the volume will be created with a capacity of 10Gi anyway.
+
+
 ## Notes
 
 In this setup, the control plane has a single master and therefore is not HA. Even some managed Kubernetes services such as the one offered by [DigitalOcean](https://www.digitalocean.com/products/kubernetes/) have a non-HA control plane, because if for example the master is temporarily unavailable due to maintenance or else, the actual workloads are not affected in most cases, so this is fine for simple clusters.
