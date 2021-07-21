@@ -10,6 +10,10 @@ source $SCRIPT_DIR/lib/create/create_firewall.sh
 
 source $SCRIPT_DIR/lib/create/create_network.sh
 
+if [ "$HA" == "true" ]; then
+  source $SCRIPT_DIR/lib/create/create_load_balancer.sh
+fi
+
 source $SCRIPT_DIR/lib/create/create_cloud_init_config.sh
 
 source $SCRIPT_DIR/lib/create/create_instances.sh

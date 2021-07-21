@@ -5,6 +5,7 @@ instance_name() {
 create_server () {
   INSTANCE_TYPE=$1
   INSTANCE_NAME=$(instance_name $INSTANCE_TYPE $2)
+  ROLE=$3
 
   if hcloud server list | grep -q $INSTANCE_NAME; then
     echo "Instance $INSTANCE_NAME already exists, skipping."
@@ -19,6 +20,8 @@ create_server () {
       --location $LOCATION \
       --ssh-key $CLUSTER_NAME \
       --type $INSTANCE_TYPE \
+      --label cluster="$CLUSTER_NAME" \
+      --label role="$ROLE" \
       --user-data-from-file /tmp/user-data
   fi
 }
@@ -27,6 +30,44 @@ public_ip () {
   INSTANCE_TYPE=$1
   INSTANCE_NAME=$(instance_name $INSTANCE_TYPE $2)
   IP_LINE=$(hcloud server describe $INSTANCE_NAME | grep "IP:" | head -n1)
+  IP=""
+
+  for word in $IP_LINE
+  do
+    IP=$word
+  done
+
+  echo $IP
+}
+
+private_ip () {
+  INSTANCE_TYPE=$1
+  INSTANCE_NAME=$(instance_name $INSTANCE_TYPE $2)
+  IP_LINE=$(hcloud server describe $INSTANCE_NAME | grep "IP:" | tail -n1)
+  IP=""
+
+  for word in $IP_LINE
+  do
+    IP=$word
+  done
+
+  echo $IP
+}
+
+public_ip_load_balancer () {
+  IP_LINE=$(hcloud load-balancer describe $CLUSTER_NAME | grep "IPv4:" | head -n1)
+  IP=""
+
+  for word in $IP_LINE
+  do
+    IP=$word
+  done
+
+  echo $IP
+}
+
+private_ip_load_balancer () {
+  IP_LINE=$(hcloud load-balancer describe $CLUSTER_NAME | grep "IP:" | head -n1)
   IP=""
 
   for word in $IP_LINE

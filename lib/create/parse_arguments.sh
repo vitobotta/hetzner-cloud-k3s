@@ -44,6 +44,15 @@ case $key in
     shift
     shift
   ;;
+  --ha)
+    HA="true"
+    shift
+  ;;
+  --master-count)
+    MASTER_COUNT="$2"
+    shift
+    shift
+  ;;
   --worker-count)
     WORKER_COUNT="$2"
     shift
@@ -100,6 +109,20 @@ SSH_USER=${SSH_USER:-"root"}
 SSH_KEY_PATH=${SSH_KEY_PATH:-"$HOME/.ssh/id_rsa.pub"}
 LATEST_VERSION=$(get_latest_release)
 K3S_VERSION=${K3S_VERSION:-"$LATEST_VERSION"}
+HA=${HA:-"false"}
+MASTER_COUNT=${MASTER_COUNT:-"1"}
+
+
+if [ "$HA" == "true" ]; then
+  if [ "$MASTER_COUNT" -lt "3" ] || [ $(($MASTER_COUNT%2)) -eq 0 ]; then
+    echo "With high availability enabled, the master count must an odd number greater or equal to 3."
+    exit 1
+  fi
+else
+  if [ "$MASTER_COUNT" != "1" ]; then
+    echo "Ignoring the master count parameter because high availability is disabled."
+  fi
+fi
 
 
 

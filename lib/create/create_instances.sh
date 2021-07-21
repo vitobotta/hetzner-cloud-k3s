@@ -1,21 +1,30 @@
-create_server $MASTER_INSTANCE_TYPE master &
+COUNTER=0
+while [  $COUNTER -lt $MASTER_COUNT ]; do
+  let COUNTER=COUNTER+1
+  create_server $MASTER_INSTANCE_TYPE master$COUNTER master &
+done
 
 COUNTER=0
 while [  $COUNTER -lt $WORKER_COUNT ]; do
   let COUNTER=COUNTER+1
-  create_server $WORKER_INSTANCE_TYPE worker$COUNTER &
+  create_server $WORKER_INSTANCE_TYPE worker$COUNTER worker &
 done
 
 wait
 
 
-MASTER_IP=$(public_ip $MASTER_INSTANCE_TYPE master)
+COUNTER=0
+while [  $COUNTER -lt $MASTER_COUNT ]; do
+  let COUNTER=COUNTER+1
 
-echo "Waiting for $(instance_name $MASTER_INSTANCE_TYPE master) to be up..."
+  MASTER_IP=$(public_ip $MASTER_INSTANCE_TYPE master$COUNTER)
 
-until ssh $SSH_USER@$MASTER_IP true >/dev/null 2>&1; do
-  sleep 1
-  echo "Waiting for $(instance_name $MASTER_INSTANCE_TYPE master) to be up..."
+  echo "Waiting for $(instance_name $MASTER_INSTANCE_TYPE master$COUNTER) to be up..."
+
+  until ssh $SSH_USER@$MASTER_IP true >/dev/null 2>&1; do
+    sleep 1
+    echo "Waiting for $(instance_name $MASTER_INSTANCE_TYPE master$COUNTER) to be up..."
+  done
 done
 
 COUNTER=0

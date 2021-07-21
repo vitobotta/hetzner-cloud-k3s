@@ -36,6 +36,16 @@ This may well be the quickest, easiest, and cheapest way to create a self manage
 
 The whole process takes 1m30s or less for a couple of nodes so it's extremely fast.
 
+### High availability setup
+
+By default the cluster will be created with a single master, which means that the control plane is not highly available. If you wish to set it up in HA mode for production use, you can pass the following additional arguments:
+
+```bash
+--ha --master-count 3
+```
+
+`--master-count` must be an odd number greater than or equal to 3. When set up in HA mode, k3s will use an embedded etcd for storage.
+
 ### Conventions:
 
 - the name of the cluster should ideally be URL compatible - such as in a few words separated by dashes - to avoid issues
@@ -166,9 +176,3 @@ The other annotations should be self explanatory. You can find a list of the ava
 
 Once the cluster is ready you can create persistent volumes out of the box with the default storage class `hcloud-volumes`, since the Hetzner CSI driver is installed automatically. This will use Hetzner's block storage (based on Ceph so it's replicated and highly available) for your persistent volumes. Note that the minimum size of a volume is 10Gi. If you specify a smaller size for a volume, the volume will be created with a capacity of 10Gi anyway.
 
-
-## Notes
-
-In this setup, the control plane has a single master and therefore is not HA. Even some managed Kubernetes services such as the one offered by [DigitalOcean](https://www.digitalocean.com/products/kubernetes/) have a non-HA control plane, because if for example the master is temporarily unavailable due to maintenance or else, the actual workloads are not affected in most cases, so this is fine for simple clusters.
-
-k3s also supports HA configurations with multiple master either with external datastores such as MySQL or Postgres, or with an embedded etcd, so I may add this support to my scripts in the future. For now I am happy with a single master and like I said it's fine in most cases.
