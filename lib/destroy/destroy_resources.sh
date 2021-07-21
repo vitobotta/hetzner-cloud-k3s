@@ -10,6 +10,8 @@ done
 
 wait
 
+hcloud load-balancer delete $CLUSTER_NAME
+
 hcloud network delete $CLUSTER_NAME
 
 hcloud firewall delete $CLUSTER_NAME
