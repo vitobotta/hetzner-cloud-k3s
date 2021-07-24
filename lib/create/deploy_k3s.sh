@@ -37,10 +37,17 @@ cat << 'EOF' >> /tmp/master.sh
     --disable servicelb \
     --disable traefik \
     --disable local-storage \
+    --disable metrics-server \
     --cluster-init \
     --write-kubeconfig-mode=644 \
     --node-name="$(hostname -f)" \
     --cluster-cidr=$CLUSTER_CIDR \
+    --etcd-expose-metrics=true \
+    --kube-controller-manager-arg="address=0.0.0.0" \
+    --kube-controller-manager-arg="bind-address=0.0.0.0" \
+    --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
+    --kube-scheduler-arg="address=0.0.0.0" \
+    --kube-scheduler-arg="bind-address=0.0.0.0" \
     --node-taint CriticalAddonsOnly=true:NoExecute \
     --kubelet-arg="cloud-provider=external" \
     --node-ip=$(hostname -I | awk '{print $2}') \
@@ -84,10 +91,17 @@ EOF
       --disable servicelb \
       --disable traefik \
       --disable local-storage \
+      --disable metrics-server \
       --server https://$FIRST_MASTER_PRIVATE_IP:6443 \
       --write-kubeconfig-mode=644 \
       --node-name="$(hostname -f)" \
       --cluster-cidr=$CLUSTER_CIDR \
+      --etcd-expose-metrics=true \
+      --kube-controller-manager-arg="address=0.0.0.0" \
+      --kube-controller-manager-arg="bind-address=0.0.0.0" \
+      --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
+      --kube-scheduler-arg="address=0.0.0.0" \
+      --kube-scheduler-arg="bind-address=0.0.0.0" \
       --node-taint CriticalAddonsOnly=true:NoExecute \
       --kubelet-arg="cloud-provider=external" \
       --node-ip=$(hostname -I | awk '{print $2}') \
