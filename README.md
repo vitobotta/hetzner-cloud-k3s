@@ -1,3 +1,8 @@
+**NOTE**: I built a much better tool that you can find at https://github.com/vitobotta/hetzner-k3s - I encourage you to use that tool instead of these scripts since it's just better.
+
+---
+
+
 # A fully functional, super cheap Kubernetes cluster in Hetzner Cloud in 1m30s or less
 
 This repository contains some scripts to create, upgrade and destroy a Kubernetes cluster in [Hetzner Cloud](https://www.hetzner.com/cloud) using the lightweight Kubernetes distribution [k3s](https://k3s.io/), from [Rancher](https://rancher.com/). The scripts manage all the resources required for a secure cluster (firewall and private network together with instances).
